@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="google-site-verification" content="4_XCunhS7A4gLnB6ImRRbP7NDYZQbGiaacll19dNh64" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -772,273 +775,62 @@ footer {
 
 
 <script>
+const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDbMTQPYEvvRTgdDvIQdEICC4-BDMR8PEPdBemtrpT7wXzpA1uHvhkFfO4Z1iCI1V3GzXSvqJ6uJvo/pub?output=csv";
 
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDbMTQPYEvvRTgdDvIQdEICC4-BDMR8PEPdBemtrpT7wXzpA1uHvhkFfO4Z1iCI1V3GzXSvqJ6uJvo/pub?output=csv";
-
-const searchInput = document.getElementById("searchInput");
-const filters = document.querySelectorAll(".filter");
-const letterCount = document.getElementById("letterCount");
-const noResults = document.getElementById("noResults");
-
-let selectedCategory = "all";
-
-
-// SEARCH + FILTER
-
-function updateLetters() {
-
-    const searchText =
-        searchInput.value.toLowerCase().trim();
-
-    const letters =
-        document.querySelectorAll(".letter");
-
-    let visibleCount = 0;
-
-    letters.forEach(letter => {
-
-        const category =
-            letter.dataset.category || "all";
-
-        const text =
-            letter.innerText.toLowerCase();
-
-        const categoryMatches =
-            selectedCategory === "all" ||
-            category === selectedCategory;
-
-        const searchMatches =
-            searchText === "" ||
-            text.includes(searchText);
-
-        if (categoryMatches && searchMatches) {
-
-            letter.style.display = "block";
-            visibleCount++;
-
-        } else {
-
-            letter.style.display = "none";
-
-        }
-
+fetch(csvUrl)
+  .then(response => response.text())
+  .then(csv => {
+    const rows = csv.split(/\r?\n/).map(row => {
+      const matches = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+      return matches ? matches.map(cell => cell.replace(/^"|"$/g, "").trim()) : [];
     });
 
-    letterCount.textContent =
-        visibleCount +
-        (visibleCount === 1 ? " letter" : " letters");
+    const headers = rows[0].map(h => h.toLowerCase());
 
-    noResults.style.display =
-        visibleCount === 0 ? "block" : "none";
-}
+    const letterIndex = headers.indexOf("write your letter");
+    const approvedIndex = headers.indexOf("approved");
 
+    const archive = document.querySelector(".letters-container") ||
+                document.querySelector(".letters") ||
+                document.querySelector("main");
 
-// SEARCH
+    if (!archive) return;
 
-searchInput.addEventListener("input", updateLetters);
+    rows.slice(1).forEach(row => {
+      if (
+        row[approvedIndex] &&
+        row[approvedIndex].toUpperCase() === "YES" &&
+        row[letterIndex]
+      ) {
+        const article = document.createElement("article");
+        article.className = "letter";
 
+        article.innerHTML = `
+          <div class="letter-top">
+            <span class="letter-from">Anonymous</span>
+            <span class="letter-label">A letter left unsent...</span>
+          </div>
 
-// FILTERS
+          <p class="letter-text">${row[letterIndex]}</p>
 
-filters.forEach(filter => {
+          <button class="heart-btn" type="button">
+            ♡ <span>Someone felt this too</span>
+          </button>
+        `;
 
-    filter.addEventListener("click", () => {
+        archive.appendChild(article);
 
-        filters.forEach(button => {
-            button.classList.remove("active");
+        const heartButton = article.querySelector(".heart-btn");
+
+        heartButton.addEventListener("click", () => {
+          heartButton.classList.toggle("felt");
         });
-
-        filter.classList.add("active");
-
-        selectedCategory =
-            filter.dataset.category;
-
-        updateLetters();
-
+      }
     });
-
-});
-
-
-// LOAD LETTERS FROM GOOGLE SHEET
-
-async function loadLetters() {
-
-    try {
-
-        const response =
-            await fetch(SHEET_URL);
-            console.log("SHEET CONNECTED");
-
-        const csv =
-            await response.text();
-
-        const rows =
-            csv.split(/\r?\n/)
-               .filter(row => row.trim() !== "");
-
-        if (rows.length < 2) {
-            updateLetters();
-            return;
-        }
-
-        const headers =
-            parseCSVRow(rows[0])
-            .map(header =>
-                header.trim().toLowerCase()
-            );
-
-        rows.slice(1).forEach(row => {
-
-            const values =
-                parseCSVRow(row);
-
-            const letterText =
-                values[3] ? values[3].trim() : "";
-
-            const category =
-                "all";
-
-            if (!letterText) return;
-
-            createLetter(letterText, category);
-
-        });
-
-        updateLetters();
-
-    } catch (error) {
-
-        console.log(
-            "Could not load letters from Google Sheet:",
-            error
-        );
-
-        updateLetters();
-
-    }
-
-}
-
-
-// CSV READER
-
-function parseCSVRow(row) {
-
-    const result = [];
-    let current = "";
-    let insideQuotes = false;
-
-    for (let i = 0; i < row.length; i++) {
-
-        const character = row[i];
-
-        if (character === '"') {
-
-            if (
-                insideQuotes &&
-                row[i + 1] === '"'
-            ) {
-                current += '"';
-                i++;
-            } else {
-                insideQuotes = !insideQuotes;
-            }
-
-        } else if (
-            character === "," &&
-            !insideQuotes
-        ) {
-
-            result.push(current);
-            current = "";
-
-        } else {
-
-            current += character;
-
-        }
-
-    }
-
-    result.push(current);
-
-    return result;
-
-}
-
-
-// CREATE LETTER
-
-function createLetter(letterText, category) {
-
-    const article =
-        document.createElement("article");
-
-    article.className = "letter";
-
-    article.dataset.category =
-        category;
-
-
-    const label =
-        document.createElement("div");
-
-    label.className =
-        "letter-label";
-
-    label.textContent =
-        "Anonymous";
-
-
-    const heading =
-        document.createElement("h3");
-
-    heading.textContent =
-        "A letter left unsent...";
-
-
-    const paragraph =
-        document.createElement("p");
-
-    paragraph.textContent =
-        letterText;
-
-
-    const heart =
-        document.createElement("button");
-
-    heart.className =
-        "heart";
-
-    heart.textContent =
-        "I felt this too";
-
-
-    heart.addEventListener("click", () => {
-
-        heart.textContent =
-            "Someone felt this too";
-
-    });
-
-
-    article.appendChild(label);
-    article.appendChild(heading);
-    article.appendChild(paragraph);
-    article.appendChild(heart);
-
-
-    noResults.before(article);
-
-}
-
-
-// START
-
-loadLetters();
-
+  })
+  .catch(error => {
+    console.error("Could not load letters:", error);
+  });
 </script>
-
 </body>
 </html>
