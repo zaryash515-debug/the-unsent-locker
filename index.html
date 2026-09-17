@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Unsent Locker</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Mono:wght@300;400&family=Kalam:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    color: #35271f;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(111,76,48,.08), transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(111,76,48,.07), transparent 28%),
+        linear-gradient(135deg, #d8c4a7, #cdb596 45%, #d7c5aa);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .18;
+    background-image:
+        radial-gradient(#6b4b32 .7px, transparent .7px),
+        radial-gradient(#fff .6px, transparent .6px);
+    background-size: 8px 8px, 11px 11px;
+    background-position: 0 0, 4px 5px;
+    mix-blend-mode: multiply;
+    z-index: 20;
+}
+
+/* HEADER */
+
+header {
+    width: 100%;
+    padding: 27px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(226,210,184,.65);
+    border-bottom: 1px solid rgba(83,57,37,.22);
+    position: relative;
+    z-index: 5;
+}
+
+.logo {
+    font-family: "DM Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 2.5px;
+    color: #3d2c20;
+}
+
+nav {
+    display: flex;
+    gap: 28px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #594334;
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+nav a:hover {
+    color: #9a6340;
+}
+
+/* HERO */
+
+.hero {
+    max-width: 1050px;
+    margin: auto;
+    padding: 125px 30px 100px;
+    text-align: center;
+    position: relative;
+}
+
+.hero-small {
+    font-family: "DM Mono", monospace;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 10px;
+    color: #765742;
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(65px, 10vw, 125px);
+    line-height: .82;
+    letter-spacing: -5px;
+    color: #3c2a20;
+}
+
+.hero h1 span {
+    display: block;
+    font-family: "Kalam", cursive;
+    font-size: .38em;
+    letter-spacing: 1px;
+    margin-top: 28px;
+    color: #76553e;
+    transform: rotate(-2deg);
+}
+
+.tagline {
+    max-width: 600px;
+    margin: 42px auto 0;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 25px;
+    font-style: italic;
+    color: #5f4735;
+}
+
+.hero-description {
+    max-width: 610px;
+    margin: 27px auto 0;
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    line-height: 2;
+    letter-spacing: .2px;
+    color: #735d4c;
+}
+
+.divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 65px;
+}
+
+.divider-line {
+    width: 55px;
+    height: 1px;
+    background: #86664d;
+    opacity: .5;
+}
+
+.divider-mark {
+    width: 7px;
+    height: 7px;
+    border: 1px solid #76543c;
+    transform: rotate(45deg);
+}
+
+/* ARCHIVE */
+
+.archive {
+    max-width: 1050px;
+    margin: auto;
+    padding: 0 30px 120px;
+}
+
+.archive-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding: 0 5px 18px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(74,48,31,.35);
+}
+
+.archive-heading h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 39px;
+    font-weight: 500;
+    color: #3e2c21;
+}
+
+.archive-heading span {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #765b46;
+}
+
+/* SEARCH */
+
+.archive-tools {
+    margin-bottom: 40px;
+}
+
+.search-box {
+    width: 100%;
+    padding: 17px 20px;
+    border: 1px solid rgba(86,57,38,.3);
+    background: rgba(245,231,207,.45);
+    outline: none;
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    color: #49352a;
+}
+
+.search-box::placeholder {
+    color: #876c57;
+}
+
+.search-box:focus {
+    border-color: #79583f;
+    background: rgba(245,231,207,.65);
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 15px;
+}
+
+.filter {
+    border: 1px solid rgba(86,57,38,.28);
+    background: transparent;
+    padding: 8px 13px;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+    color: #6d523e;
+    cursor: pointer;
+}
+
+.filter:hover,
+.filter.active {
+    background: rgba(91,61,39,.12);
+    border-color: rgba(86,57,38,.5);
+}
+
+.letter-count {
+    margin-top: 15px;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #806550;
+}
+
+/* LETTERS */
+
+.letter {
+    position: relative;
+    padding: 47px 48px 43px;
+    margin-bottom: 35px;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.25), transparent 30%, rgba(91,60,36,.05) 75%),
+        #e7d6b9;
+    color: #403025;
+    box-shadow:
+        0 4px 7px rgba(57,37,23,.12),
+        0 16px 28px rgba(57,37,23,.10);
+    border: 1px solid rgba(94,65,42,.18);
+    transform: rotate(-.45deg);
+}
+
+.letter:nth-of-type(2) {
+    background:
+        linear-gradient(120deg, rgba(255,255,255,.18), transparent 35%, rgba(90,55,30,.07)),
+        #ddc8a7;
+    transform: rotate(.55deg);
+}
+
+.letter:nth-of-type(3) {
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.2), transparent 45%, rgba(90,55,30,.05)),
+        #e2cdb0;
+    transform: rotate(-.25deg);
+}
+
+.letter:nth-of-type(4) {
+    background:
+        linear-gradient(125deg, rgba(255,255,255,.22), transparent 40%, rgba(90,55,30,.06)),
+        #d8c09e;
+    transform: rotate(.4deg);
+}
+
+.letter:nth-of-type(5) {
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.22), transparent 40%, rgba(90,55,30,.05)),
+        #e5d2b4;
+    transform: rotate(-.35deg);
+}
+
+.letter::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(rgba(72,48,30,.12) .6px, transparent .6px);
+    background-size: 6px 6px;
+    opacity: .24;
+    pointer-events: none;
+}
+
+.letter::after {
+    content: "";
+    position: absolute;
+    top: 13px;
+    right: 18px;
+    width: 50px;
+    height: 1px;
+    background: rgba(92,61,39,.22);
+    transform: rotate(2deg);
+}
+
+.letter:hover {
+    transform: translateY(-5px) rotate(0deg);
+    box-shadow:
+        0 7px 12px rgba(57,37,23,.15),
+        0 22px 35px rgba(57,37,23,.13);
+    transition: .25s ease;
+}
+
+.letter-label {
+    position: relative;
+    z-index: 1;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #85664d;
+    margin-bottom: 23px;
+}
+
+.letter h3 {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    font-family: "Kalam", cursive;
+    font-size: clamp(25px, 3vw, 34px);
+    font-weight: 400;
+    line-height: 1.25;
+    color: #3d2b20;
+    margin-bottom: 25px;
+}
+
+.letter p {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.65;
+    color: #514034;
+}
+
+.heart {
+    position: relative;
+    z-index: 2;
+    margin-top: 30px;
+    border: 1px solid rgba(88,59,39,.3);
+    background: rgba(255,247,231,.28);
+    padding: 9px 15px;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: .8px;
+    color: #71553f;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.heart:hover {
+    background: rgba(255,247,231,.55);
+    border-color: #795a42;
+}
+
+.no-results {
+    display: none;
+    text-align: center;
+    padding: 70px 20px;
+    font-family: "Kalam", cursive;
+    font-size: 25px;
+    color: #684d39;
+}
+
+/* CLOSING */
+
+.closing-note {
+    max-width: 600px;
+    margin: 10px auto 120px;
+    padding: 0 30px;
+    text-align: center;
+}
+
+.closing-note p {
+    font-family: "Kalam", cursive;
+    font-size: 25px;
+    line-height: 1.5;
+    color: #614936;
+}
+
+.closing-note small {
+    display: block;
+    margin-top: 18px;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #816650;
+}
+
+/* FOOTER */
+
+footer {
+    padding: 38px 20px;
+    border-top: 1px solid rgba(74,48,31,.25);
+    text-align: center;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #765b46;
+}
+
+/* MOBILE */
+
+@media(max-width:650px) {
+
+    header {
+        padding: 22px 6%;
+    }
+
+    nav {
+        gap: 14px;
+    }
+
+    nav a {
+        font-size: 9px;
+    }
+
+    .hero {
+        padding: 90px 25px;
+    }
+
+    .hero h1 {
+        letter-spacing: -3px;
+    }
+
+    .tagline {
+        font-size: 21px;
+    }
+
+    .hero-description {
+        font-size: 10px;
+    }
+
+    .archive {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .archive-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .letter {
+        padding: 35px 27px;
+    }
+
+    .letter h3 {
+        font-size: 27px;
+    }
+
+    .letter p {
+        font-size: 18px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">THE UNSENT LOCKER</div>
+
+    <nav>
+        <a href="#archive">Archive</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfeNauaVBzLIuaEwYxTCl-NfrUMNp_-IDIDmjIhxVxPI3Th-Q/viewform?usp=header" class="nav-link" target="_blank">Leave a Letter</a>
+    </nav>
+
+</header>
+
+
+<section class="hero">
+
+    <div class="hero-small">
+        An anonymous archive of unsent words
+    </div>
+
+    <h1>
+        The Unsent
+        <span>Locker</span>
+    </h1>
+
+    <div class="tagline">
+        Where the words you couldn't say finally have a place.
+    </div>
+
+    <p class="hero-description">
+        Some things are too difficult to say out loud.
+        Some people never know what they meant to us.
+        And some words stay with us long after the moment has passed.
+        <br><br>
+        This is a place for those words.
+    </p>
+
+    <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-mark"></div>
+        <div class="divider-line"></div>
+    </div>
+
+</section>
+
+
+<main class="archive" id="archive">
+
+    <div class="archive-heading">
+
+        <h2>From the Locker</h2>
+
+        <span>Anonymous letters</span>
+
+    </div>
+
+
+    <div class="archive-tools">
+
+        <input
+            type="text"
+            id="searchInput"
+            class="search-box"
+            placeholder="Search the locker..."
+        >
+
+        <div class="filters">
+
+            <button class="filter active" data-category="all">
+                All
+            </button>
+
+            <button class="filter" data-category="friendship">
+                Friendship
+            </button>
+
+            <button class="filter" data-category="kindness">
+                Kindness
+            </button>
+
+            <button class="filter" data-category="school">
+                School
+            </button>
+
+            <button class="filter" data-category="family">
+                Family
+            </button>
+
+            <button class="filter" data-category="self">
+                To Myself
+            </button>
+
+        </div>
+
+        <div class="letter-count" id="letterCount">
+            5 letters
+        </div>
+
+    </div>
+
+
+    <!-- LETTER 1 -->
+
+    <article class="letter" data-category="friendship">
+
+        <div class="letter-label">
+            Friendship
+        </div>
+
+        <h3>
+            To the friend I drifted away from...
+        </h3>
+
+        <p>
+            I still think about the years when talking to you
+            was the easiest thing in the world. Somewhere between
+            growing up and becoming different people, we stopped
+            calling. I don't think either of us meant for it to happen.
+            <br><br>
+            I hope you're doing well. And I hope you know that
+            losing touch never made those years mean less to me.
+        </p>
+
+        <button class="heart"
+            onclick="this.textContent='Someone felt this too'">
+            I felt this too
+        </button>
+
+    </article>
+
+
+    <!-- LETTER 2 -->
+
+    <article class="letter" data-category="kindness">
+
+        <div class="letter-label">
+            Kindness
+        </div>
+
+        <h3>
+            To the classmate who smiled at me when I was having
+            a terrible day...
+        </h3>
+
+        <p>
+            You probably don't remember it.
+            <br><br>
+            You walked past me, smiled, and asked if I was okay.
+            I said yes because I didn't know what else to say.
+            But I remember that small moment.
+            <br><br>
+            Sometimes people don't realize how much a tiny act
+            of kindness can mean to someone who is struggling quietly.
+        </p>
+
+        <button class="heart"
+            onclick="this.textContent='Someone felt this too'">
+            I felt this too
+        </button>
+
+    </article>
+
+
+    <!-- LETTER 3 -->
+
+    <article class="letter" data-category="school">
+
+        <div class="letter-label">
+            School
+        </div>
+
+        <h3>
+            To the people who made me feel like I didn't belong...
+        </h3>
+
+        <p>
+            For a long time, I thought there must be something
+            wrong with me. I wondered why being myself seemed
+            to make me an easy target.
+            <br><br>
+            I'm slowly learning that someone's decision to be unkind
+            doesn't decide my worth. I wish I had understood that sooner.
+        </p>
+
+        <button class="heart"
+            onclick="this.textContent='Someone felt this too'">
+            I felt this too
+        </button>
+
+    </article>
+
+
+    <!-- LETTER 4 -->
+
+    <article class="letter" data-category="family">
+
+        <div class="letter-label">
+            Family
+        </div>
+
+        <h3>
+            To the version of my family that I remember...
+        </h3>
+
+        <p>
+            I know things change. Adults change. Families change.
+            Everyone keeps telling me that I'll get used to it.
+            <br><br>
+            Maybe they're right. But I think it's okay to miss
+            the way things used to be while still learning how
+            to live with the way they are now.
+        </p>
+
+        <button class="heart"
+            onclick="this.textContent='Someone felt this too'">
+            I felt this too
+        </button>
+
+    </article>
+
+
+    <!-- LETTER 5 -->
+
+    <article class="letter" data-category="self">
+
+        <div class="letter-label">
+            To Myself
+        </div>
+
+        <h3>
+            To the younger me...
+        </h3>
+
+        <p>
+            You spent so much time worrying about whether
+            you were good enough.
+            <br><br>
+            I wish I could tell you that growing up isn't about
+            becoming perfect. It's about becoming someone who
+            understands themselves a little better.
+            <br><br>
+            You were doing better than you thought.
+        </p>
+
+        <button class="heart"
+            onclick="this.textContent='Someone felt this too'">
+            I felt this too
+        </button>
+
+    </article>
+
+
+    <div class="no-results" id="noResults">
+        Nothing here yet.
+        <br>
+        Maybe the words you're looking for haven't been written.
+    </div>
+
+</main>
+
+
+<section class="closing-note">
+
+    <p>
+        Maybe somewhere in these words,
+        someone will recognize a little bit of themselves.
+    </p>
+
+    <small>
+        You are not the only one who has left words unsaid.
+    </small>
+
+</section>
+
+
+<footer>
+    THE UNSENT LOCKER — A QUIET PLACE FOR WORDS LEFT UNSAID.
+</footer>
+
+
+<script>
+
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDbMTQPYEvvRTgdDvIQdEICC4-BDMR8PEPdBemtrpT7wXzpA1uHvhkFfO4Z1iCI1V3GzXSvqJ6uJvo/pub?output=csv";
+
+const searchInput = document.getElementById("searchInput");
+const filters = document.querySelectorAll(".filter");
+const letterCount = document.getElementById("letterCount");
+const noResults = document.getElementById("noResults");
+
+let selectedCategory = "all";
+
+
+// SEARCH + FILTER
+
+function updateLetters() {
+
+    const searchText =
+        searchInput.value.toLowerCase().trim();
+
+    const letters =
+        document.querySelectorAll(".letter");
+
+    let visibleCount = 0;
+
+    letters.forEach(letter => {
+
+        const category =
+            letter.dataset.category || "all";
+
+        const text =
+            letter.innerText.toLowerCase();
+
+        const categoryMatches =
+            selectedCategory === "all" ||
+            category === selectedCategory;
+
+        const searchMatches =
+            searchText === "" ||
+            text.includes(searchText);
+
+        if (categoryMatches && searchMatches) {
+
+            letter.style.display = "block";
+            visibleCount++;
+
+        } else {
+
+            letter.style.display = "none";
+
+        }
+
+    });
+
+    letterCount.textContent =
+        visibleCount +
+        (visibleCount === 1 ? " letter" : " letters");
+
+    noResults.style.display =
+        visibleCount === 0 ? "block" : "none";
+}
+
+
+// SEARCH
+
+searchInput.addEventListener("input", updateLetters);
+
+
+// FILTERS
+
+filters.forEach(filter => {
+
+    filter.addEventListener("click", () => {
+
+        filters.forEach(button => {
+            button.classList.remove("active");
+        });
+
+        filter.classList.add("active");
+
+        selectedCategory =
+            filter.dataset.category;
+
+        updateLetters();
+
+    });
+
+});
+
+
+// LOAD LETTERS FROM GOOGLE SHEET
+
+async function loadLetters() {
+
+    try {
+
+        const response =
+            await fetch(SHEET_URL);
+            console.log("SHEET CONNECTED");
+
+        const csv =
+            await response.text();
+
+        const rows =
+            csv.split(/\r?\n/)
+               .filter(row => row.trim() !== "");
+
+        if (rows.length < 2) {
+            updateLetters();
+            return;
+        }
+
+        const headers =
+            parseCSVRow(rows[0])
+            .map(header =>
+                header.trim().toLowerCase()
+            );
+
+        rows.slice(1).forEach(row => {
+
+            const values =
+                parseCSVRow(row);
+
+            const letterText =
+                values[3] ? values[3].trim() : "";
+
+            const category =
+                "all";
+
+            if (!letterText) return;
+
+            createLetter(letterText, category);
+
+        });
+
+        updateLetters();
+
+    } catch (error) {
+
+        console.log(
+            "Could not load letters from Google Sheet:",
+            error
+        );
+
+        updateLetters();
+
+    }
+
+}
+
+
+// CSV READER
+
+function parseCSVRow(row) {
+
+    const result = [];
+    let current = "";
+    let insideQuotes = false;
+
+    for (let i = 0; i < row.length; i++) {
+
+        const character = row[i];
+
+        if (character === '"') {
+
+            if (
+                insideQuotes &&
+                row[i + 1] === '"'
+            ) {
+                current += '"';
+                i++;
+            } else {
+                insideQuotes = !insideQuotes;
+            }
+
+        } else if (
+            character === "," &&
+            !insideQuotes
+        ) {
+
+            result.push(current);
+            current = "";
+
+        } else {
+
+            current += character;
+
+        }
+
+    }
+
+    result.push(current);
+
+    return result;
+
+}
+
+
+// CREATE LETTER
+
+function createLetter(letterText, category) {
+
+    const article =
+        document.createElement("article");
+
+    article.className = "letter";
+
+    article.dataset.category =
+        category;
+
+
+    const label =
+        document.createElement("div");
+
+    label.className =
+        "letter-label";
+
+    label.textContent =
+        "Anonymous";
+
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        "A letter left unsent...";
+
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent =
+        letterText;
+
+
+    const heart =
+        document.createElement("button");
+
+    heart.className =
+        "heart";
+
+    heart.textContent =
+        "I felt this too";
+
+
+    heart.addEventListener("click", () => {
+
+        heart.textContent =
+            "Someone felt this too";
+
+    });
+
+
+    article.appendChild(label);
+    article.appendChild(heading);
+    article.appendChild(paragraph);
+    article.appendChild(heart);
+
+
+    noResults.before(article);
+
+}
+
+
+// START
+
+loadLetters();
+
+</script>
+
+</body>
+</html>
