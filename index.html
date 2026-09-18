@@ -773,7 +773,9 @@ footer {
 
 
 <script>
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDbMTQPYEvvRTgdDvIQdEICC4-BDMR8PEPdBemtrpT7wXzpA1uHvhkFfO4Z1iCI1V3GzXSvqJ6uJvo/pub?gid=471765352&single=true&output=csv";
+
+const SHEET_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQDbMTQPYEvvRTgdDvIQdEICC4-BDMR8PEPdBemtrpT7wXzpA1uHvhkFfO4Z1iCI1V3GzXSvqJ6uJvo/pub?output=csv";
 
 const searchInput = document.getElementById("searchInput");
 const filters = document.querySelectorAll(".filter");
@@ -860,8 +862,99 @@ filters.forEach(filter => {
 });
 
 
-// CSV READER
-// This version correctly handles letters containing line breaks.
+// LOAD LETTERS FROM GOOGLE SHEET
+
+async function loadLetters() {
+
+    try {
+
+        console.log("Connecting to Google Sheet...");
+
+        const response =
+            await fetch(
+                SHEET_URL + "&cache=" + Date.now()
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Google Sheet returned " + response.status
+            );
+        }
+
+        const csv =
+            await response.text();
+
+        console.log("Google Sheet connected.");
+
+        const rows =
+            parseCSV(csv);
+
+        if (rows.length < 2) {
+            updateLetters();
+            return;
+        }
+
+        // Google Form columns:
+        // 0 = Timestamp
+        // 1 = Who is this letter for?
+        // 2 = What is this letter about?
+        // 3 = Write Your LETTER
+        // 4 = Column 5
+
+        rows.slice(1).forEach(values => {
+
+            const who =
+                values[1]
+                    ? values[1].trim()
+                    : "";
+
+            const about =
+                values[2]
+                    ? values[2].trim()
+                    : "";
+
+            const letterText =
+                values[3]
+                    ? values[3].trim()
+                    : "";
+
+            if (!letterText) return;
+
+            const category =
+                getCategory(about);
+
+            createLetter(
+                letterText,
+                category,
+                who,
+                about
+            );
+
+        });
+
+        updateLetters();
+
+        console.log(
+            "Letters loaded:",
+            document.querySelectorAll(".letter").length
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not load letters from Google Sheet:",
+            error
+        );
+
+        updateLetters();
+
+    }
+
+}
+
+
+// CSV PARSER
+// Handles commas and quoted text correctly.
 
 function parseCSV(csv) {
 
@@ -873,11 +966,11 @@ function parseCSV(csv) {
     for (let i = 0; i < csv.length; i++) {
 
         const character = csv[i];
-        const nextCharacter = csv[i + 1];
+        const next = csv[i + 1];
 
         if (character === '"') {
 
-            if (insideQuotes && nextCharacter === '"') {
+            if (insideQuotes && next === '"') {
 
                 current += '"';
                 i++;
@@ -888,7 +981,10 @@ function parseCSV(csv) {
 
             }
 
-        } else if (character === "," && !insideQuotes) {
+        } else if (
+            character === "," &&
+            !insideQuotes
+        ) {
 
             row.push(current);
             current = "";
@@ -898,14 +994,19 @@ function parseCSV(csv) {
             !insideQuotes
         ) {
 
-            if (character === "\r" && nextCharacter === "\n") {
+            if (
+                character === "\r" &&
+                next === "\n"
+            ) {
                 i++;
             }
 
             row.push(current);
             current = "";
 
-            if (row.some(cell => cell.trim() !== "")) {
+            if (
+                row.some(cell => cell.trim() !== "")
+            ) {
                 rows.push(row);
             }
 
@@ -921,7 +1022,9 @@ function parseCSV(csv) {
 
     row.push(current);
 
-    if (row.some(cell => cell.trim() !== "")) {
+    if (
+        row.some(cell => cell.trim() !== "")
+    ) {
         rows.push(row);
     }
 
@@ -930,61 +1033,73 @@ function parseCSV(csv) {
 }
 
 
-// LOAD LETTERS FROM GOOGLE SHEET
+// DETERMINE CATEGORY
 
-async function loadLetters() {
+function getCategory(about) {
 
-    try {
+    const text =
+        about.toLowerCase();
 
-        const response = await fetch(SHEET_URL);
-
-        if (!response.ok) {
-            throw new Error("Could not connect to Google Sheet.");
-        }
-
-        console.log("SHEET CONNECTED");
-
-        const csv = await response.text();
-
-        const rows = parseCSV(csv);
-
-        if (rows.length < 2) {
-            updateLetters();
-            return;
-        }
-
-        // Skip the header row and load every submitted letter.
-
-        rows.slice(1).forEach(values => {
-
-            const letterText =
-                values[3] ? values[3].trim() : "";
-
-            if (!letterText) return;
-
-            createLetter(letterText, "all");
-
-        });
-
-        updateLetters();
-
-    } catch (error) {
-
-        console.log(
-            "Could not load letters from Google Sheet:",
-            error
-        );
-
-        updateLetters();
-
+    if (
+        text.includes("friend") ||
+        text.includes("friendship")
+    ) {
+        return "friendship";
     }
+
+    if (
+        text.includes("kind") ||
+        text.includes("thank") ||
+        text.includes("grateful") ||
+        text.includes("appreciat")
+    ) {
+        return "kindness";
+    }
+
+    if (
+        text.includes("school") ||
+        text.includes("class") ||
+        text.includes("teacher") ||
+        text.includes("student") ||
+        text.includes("bully")
+    ) {
+        return "school";
+    }
+
+    if (
+        text.includes("family") ||
+        text.includes("mother") ||
+        text.includes("mom") ||
+        text.includes("father") ||
+        text.includes("dad") ||
+        text.includes("parent") ||
+        text.includes("sister") ||
+        text.includes("brother")
+    ) {
+        return "family";
+    }
+
+    if (
+        text.includes("myself") ||
+        text.includes("self") ||
+        text.includes("me")
+    ) {
+        return "self";
+    }
+
+    return "all";
 
 }
 
 
-// CREATE LETTER
+// CREATE SUBMITTED LETTER
 
-function createLetter(letterText, category) {
+function createLetter(
+    letterText,
+    category,
+    who,
+    about
+) {
 
     const article =
         document.createElement("article");
@@ -995,6 +1110,8 @@ function createLetter(letterText, category) {
         category;
 
 
+    // LABEL
+
     const label =
         document.createElement("div");
 
@@ -1002,15 +1119,28 @@ function createLetter(letterText, category) {
         "letter-label";
 
     label.textContent =
-        "Anonymous";
+        about || "Anonymous";
 
+
+    // HEADING
 
     const heading =
         document.createElement("h3");
 
-    heading.textContent =
-        "A letter left unsent...";
+    if (who) {
 
+        heading.textContent =
+            "To " + who + "...";
+
+    } else {
+
+        heading.textContent =
+            "A letter left unsent...";
+
+    }
+
+
+    // LETTER TEXT
 
     const paragraph =
         document.createElement("p");
@@ -1018,6 +1148,8 @@ function createLetter(letterText, category) {
     paragraph.textContent =
         letterText;
 
+
+    // HEART BUTTON
 
     const heart =
         document.createElement("button");
@@ -1041,7 +1173,6 @@ function createLetter(letterText, category) {
     article.appendChild(heading);
     article.appendChild(paragraph);
     article.appendChild(heart);
-
 
     noResults.before(article);
 
